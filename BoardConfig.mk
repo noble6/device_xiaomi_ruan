@@ -79,8 +79,8 @@ DEVICE_MANIFEST_FILE += \
 DEVICE_FRAMEWORK_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/framework_manifest.xml
 
 # Kernel
-# The GKI Image is built from source (kernel/xiaomi/sm7435, Xiaomi ruan-u-oss
-# + KernelSU-Next) with the GKI compiler, so its symbol CRCs match the stock
+# The GKI Image is built from source (kernel/xiaomi/sm7435, Xiaomi ruan-u-oss)
+# with the GKI compiler, so its symbol CRCs match the stock
 # vendor modules and dtb below, which stay prebuilt.
 # Build with RUAN_PREBUILT_KERNEL=true to use the stock prebuilt Image instead.
 KERNEL_PATH := $(DEVICE_PATH)-kernel
