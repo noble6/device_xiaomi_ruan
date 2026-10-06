@@ -95,6 +95,9 @@ TARGET_KERNEL_CONFIG := \
     gki_defconfig \
     vendor/ruan_rom.config
 TARGET_KERNEL_CLANG_PATH := $(abspath prebuilts/clang/kernel/linux-x86/clang-r416183b)
+# 5.10 only passes --target to clang when CROSS_COMPILE is set, and Lineage
+# leaves it empty for clang-only builds; with LLVM=1 it is used for nothing else.
+TARGET_KERNEL_ADDITIONAL_FLAGS := CROSS_COMPILE=aarch64-linux-gnu-
 ifeq ($(RUAN_PREBUILT_KERNEL),true)
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image
