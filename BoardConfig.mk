@@ -78,7 +78,11 @@ DEVICE_MANIFEST_FILE += \
 
 DEVICE_FRAMEWORK_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/framework_manifest.xml
 
-# Kernel (prebuilt stock GKI and vendor modules)
+# Kernel
+# The GKI Image is built from source (kernel/xiaomi/sm7435, Xiaomi ruan-u-oss
+# + KernelSU-Next) with the GKI compiler, so its symbol CRCs match the stock
+# vendor modules and dtb below, which stay prebuilt.
+# Build with RUAN_PREBUILT_KERNEL=true to use the stock prebuilt Image instead.
 KERNEL_PATH := $(DEVICE_PATH)-kernel
 
 BOARD_KERNEL_BASE := 0x00000000
@@ -89,9 +93,12 @@ BOARD_RAMDISK_USE_LZ4 := true
 TARGET_KERNEL_SOURCE := kernel/xiaomi/sm7435
 TARGET_KERNEL_CONFIG := \
     gki_defconfig \
-    vendor/parrot_GKI.config
+    vendor/ruan_rom.config
+TARGET_KERNEL_CLANG_PATH := $(BUILD_TOP)/prebuilts/clang/kernel/linux-x86/clang-r416183b
+ifeq ($(RUAN_PREBUILT_KERNEL),true)
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image
+endif
 
 # ruan ships its own dtbo.img (the dizi ROM's ruan entry lacked camera nodes)
 BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtb
