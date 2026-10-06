@@ -17,7 +17,10 @@ on boot
     chmod 2770 /dev/socket/qmux_radio
 
 on property:sys.boot_completed=1
-    write /sys/devices/virtual/thermal/thermal_message/sconfig 20
+    # Xiaomi's default thermal profile. 20 (thermal-mgame.conf, the benchmark
+    # profile in Parts) holds the battery cooling device at level 6+, which
+    # caps PPS charging at ~3.3 A instead of ~5.7 A (33 W) at 33 C.
+    write /sys/devices/virtual/thermal/thermal_message/sconfig 0
 
     # Enable PowerHAL hint processing
     setprop vendor.powerhal.init 1
