@@ -23,10 +23,9 @@ prebuilt_etc {
     vendor: true,
 }
 
-prebuilt_etc {
+sh_binary {
     name: "init.ruan.usb_attach.sh",
     src: "bin/init.ruan.usb_attach.sh",
-    sub_dir: "init",
     vendor: true,
 }
 
