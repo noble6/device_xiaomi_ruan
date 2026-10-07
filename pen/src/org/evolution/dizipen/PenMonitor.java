@@ -32,16 +32,19 @@ public final class PenMonitor implements InputManager.InputDeviceListener {
 
     private final InputManager mInputManager;
     private final PenPairer mPairer;
+    private final RefreshRateBoost mBoost;
     private boolean mConnected;
 
     PenMonitor(Context context, PenPairer pairer) {
         mInputManager = context.getSystemService(InputManager.class);
         mPairer = pairer;
+        mBoost = new RefreshRateBoost(context);
     }
 
     void start() {
         mInputManager.registerInputDeviceListener(this, null);
-        // Re-evaluate when persist.vendor.pen.force is toggled (e.g. via adb).
+        // Re-evaluate when persist.vendor.pen.force is toggled (e.g. via adb), and follow
+        // vendor.pen.active from xiaomi-pen-pressure.
         SystemProperties.addChangeCallback(this::refresh);
         refresh();
         mPairer.setPenConnected(mConnected);
@@ -62,6 +65,7 @@ public final class PenMonitor implements InputManager.InputDeviceListener {
                 break;
             }
         }
+        mBoost.refresh(connected);
         if (connected == mConnected) {
             return;
         }

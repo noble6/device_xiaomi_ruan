@@ -118,6 +118,7 @@ on property:vendor.pen.state=connected
 
 on property:vendor.pen.state=disconnected
     stop vendor.pen_pressure
+    setprop vendor.pen.active 0
 
 # Recover USB (MTP, adb) when the controller misses the attach at boot
 service vendor.usb_attach /vendor/bin/init.ruan.usb_attach.sh

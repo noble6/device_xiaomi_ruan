@@ -2,3 +2,4 @@ allow system_app sysfs_thermal:file write;
 allow system_app sysfs_thermal:file rw_file_perms;
 
 set_prop(system_app, vendor_pen_prop)
+get_prop(system_app, vendor_pen_active_prop)
