@@ -12,3 +12,5 @@ allow xiaomi_pen_pressure kmsg_device:chr_file w_file_perms;
 allow xiaomi_pen_pressure input_device:dir r_dir_perms;
 allow xiaomi_pen_pressure input_device:chr_file { open read ioctl getattr };
 allow xiaomi_pen_pressure uhid_device:chr_file { open read write ioctl getattr };
+# Tell DiziPen while the pen is in use (vendor.pen.active).
+set_prop(xiaomi_pen_pressure, vendor_pen_active_prop)

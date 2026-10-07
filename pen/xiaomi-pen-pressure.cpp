@@ -19,6 +19,11 @@
 // IC's pen input device and re-publish it through uinput: contact = IC ink and Bluetooth
 // pressure above a dead zone, everything else is hover. If this process dies, the grab ends
 // and the IC's own device takes over again.
+//
+// Activity: the pen streams report 5 (~1400/s) from the moment it is picked up, before it
+// touches the screen, and stops when it is put down. vendor.pen.active tells DiziPen, which
+// keeps the display at its peak refresh rate meanwhile: the IC only finds the pen at a high
+// refresh rate, and at the 30 Hz idle rate the pen stayed dead until a finger touch.
 
 #include <dirent.h>
 #include <fcntl.h>
@@ -30,6 +35,7 @@
 #include <unistd.h>
 
 #include <cerrno>
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -38,6 +44,7 @@
 #include <vector>
 
 #include <android-base/logging.h>
+#include <android-base/properties.h>
 #include <android-base/unique_fd.h>
 
 using android::base::unique_fd;
@@ -57,6 +64,42 @@ constexpr uint16_t kPenVendorId = 0x0022;
 constexpr uint16_t kPenProductIds[] = {0x4e83, 0x3283};
 
 constexpr int kRescanMs = 1000;
+
+constexpr const char* kActiveProp = "vendor.pen.active";
+// Reports stop within a second of the pen being put down; leave some margin.
+constexpr std::chrono::milliseconds kInactiveAfter{3000};
+
+using Clock = std::chrono::steady_clock;
+
+class Activity {
+  public:
+    void reportSeen() {
+        last_ = Clock::now();
+        set(true);
+    }
+
+    // Poll timeout until the pen counts as inactive, or -1 while it already is.
+    int timeoutMs() const {
+        if (!active_) return -1;
+        auto left = std::chrono::duration_cast<std::chrono::milliseconds>(
+                last_ + kInactiveAfter - Clock::now());
+        return left.count() > 0 ? static_cast<int>(left.count()) : 0;
+    }
+
+    void update() {
+        if (active_ && Clock::now() - last_ >= kInactiveAfter) set(false);
+    }
+
+    void set(bool active) {
+        if (active == active_) return;
+        active_ = active;
+        android::base::SetProperty(kActiveProp, active ? "1" : "0");
+    }
+
+  private:
+    bool active_ = false;
+    Clock::time_point last_;
+};
 
 // Hover peaks seen: ~255. Light taps start at ~340. Overridable as argv[1] for tuning.
 constexpr unsigned kDefaultDeadZone = 280;
@@ -284,13 +327,21 @@ int main(int argc, char** argv) {
     // after the input devices, and disappears when the pen disconnects.
     unique_fd pen;
     bool logged = false;
+    Activity activity;
+    // Clear a value left behind if a previous instance was killed while the pen was active.
+    android::base::SetProperty(kActiveProp, "0");
     for (;;) {
         if (pen < 0) {
             pen = openPenHidraw();
             logged = false;
         }
         pollfd fds[2] = {{ic.get(), POLLIN, 0}, {pen.get(), POLLIN, 0}};
-        int ret = poll(fds, 2, pen < 0 ? kRescanMs : -1);
+        int timeout = activity.timeoutMs();
+        if (pen < 0 && (timeout < 0 || timeout > kRescanMs)) {
+            timeout = kRescanMs;
+        }
+        int ret = poll(fds, 2, timeout);
+        activity.update();
         if (ret < 0) {
             if (errno == EINTR) {
                 continue;
@@ -320,6 +371,7 @@ int main(int argc, char** argv) {
             if (len <= 0) {
                 LOG(INFO) << "pen pressure: hidraw closed";
                 pen.reset();
+                activity.set(false);
                 state.pressure = 0;
                 if (virtualPen.valid() && ic >= 0) {
                     virtualPen.report(state);
@@ -329,6 +381,7 @@ int main(int argc, char** argv) {
             if (report[0] != kPressureReportId || static_cast<size_t>(len) < 3) {
                 continue;
             }
+            activity.reportSeen();
             if (!logged) {
                 LOG(INFO) << "pen pressure: first report, " << len << " bytes";
                 logged = true;
