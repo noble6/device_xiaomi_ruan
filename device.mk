@@ -340,6 +340,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
 
+# The NT36532 has no flash: nt36532_spi downloads its firmware at probe.
+# Recovery doesn't mount /vendor, so ship the firmware in its ramdisk.
+PRODUCT_COPY_FILES += \
+    $(foreach panel,boe csot, \
+        vendor/xiaomi/ruan/proprietary/vendor/firmware/novatek_ts_fw_$(panel).bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/novatek_ts_fw_$(panel).bin)
+
 # Update engine
 PRODUCT_PACKAGES += \
     update_engine \
