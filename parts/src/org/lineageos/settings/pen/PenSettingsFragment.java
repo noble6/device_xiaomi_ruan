@@ -137,7 +137,12 @@ public class PenSettingsFragment extends PreferenceFragment implements
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         String key = preference.getKey();
         if (PREF_FORCE.equals(key)) {
-            SystemProperties.set(PROP_FORCE, (Boolean) newValue ? "true" : "false");
+            try {
+                SystemProperties.set(PROP_FORCE, (Boolean) newValue ? "true" : "false");
+            } catch (RuntimeException e) {
+                // Denied: leave the switch as it was instead of crashing.
+                return false;
+            }
             return true;
         }
         Settings.Secure.putString(getContext().getContentResolver(), key, (String) newValue);
