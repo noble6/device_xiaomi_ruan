@@ -214,6 +214,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.keystore.app_attest_key.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.keystore.app_attest_key.xml
 
+# Kernel manager (AxDiagnostics reads it from system_ext only)
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/kernel/ax_kernel_manager.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/ax_kernel_manager.xml
+
 # Lineage Health
 PRODUCT_PACKAGES += \
     vendor.lineage.health-service.default
