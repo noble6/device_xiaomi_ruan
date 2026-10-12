@@ -17,6 +17,7 @@ Also boots on the Redmi Pad Pro / POCO Pad (dizi).
 
 - `axion`: AxionOS (LineageOS 23.2 based)
 - `lunaris`: Lunaris AOSP 16.2
+- `lineage-24.0`: LineageOS 24.0 (Android 17)
 
 ## Building
 
@@ -42,6 +43,14 @@ Lunaris (use the `lunaris` branch's manifest):
 ```
 . build/envsetup.sh
 lunch lineage_ruan-bp4a-user
+m bacon
+```
+
+LineageOS (use the `lineage-24.0` branch's manifest):
+
+```
+. build/envsetup.sh
+breakfast ruan user
 m bacon
 ```
 
