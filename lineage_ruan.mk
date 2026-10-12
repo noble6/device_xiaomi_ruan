@@ -9,7 +9,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 TARGET_SUPPORTS_OMX_SERVICE := false
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common LineageOS stuff.
+# Inherit some common crDroid / LineageOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_tablet.mk)
 
 # Inherit from ruan device

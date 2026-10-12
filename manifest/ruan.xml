@@ -10,7 +10,7 @@
   <remote name="nekoshirro" fetch="https://github.com/nekoshirro/" />
 
   <!-- Device tree -->
-  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="lineage-24.0" />
+  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="crdroid" />
 
   <!-- Prebuilt stock vendor modules, dtb (+ stock Image as fallback) -->
   <project path="device/xiaomi/ruan-kernel" name="device_xiaomi_ruan-kernel" remote="ruan-dev" revision="axion" />
