@@ -10,7 +10,7 @@
   <remote name="nekoshirro" fetch="https://github.com/nekoshirro/" />
 
   <!-- Device tree -->
-  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="axion" />
+  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="lineage-24.0" />
 
   <!-- Prebuilt stock vendor modules, dtb (+ stock Image as fallback) -->
   <project path="device/xiaomi/ruan-kernel" name="device_xiaomi_ruan-kernel" remote="ruan-dev" revision="axion" />
@@ -25,7 +25,7 @@
   <project path="kernel/xiaomi/sm7435-modules" name="kernel_xiaomi_garnet-modules" remote="ruan-dev" revision="bka" clone-depth="1" />
 
   <!-- Hardware -->
-  <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-23.2" />
+  <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-24.0" />
   <project path="hardware/dolby" name="android_hardware_dolby" remote="nekoshirro" revision="lunaris" />
 
   <!-- GameBar -->
