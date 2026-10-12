@@ -1,6 +1,6 @@
-From ad2a6dbea811af0e09cacc42914b1e862d5b6601 Mon Sep 17 00:00:00 2001
+From 97d8882066a2088ad4c5f843607c90daf31ff8e3 Mon Sep 17 00:00:00 2001
 From: noble6 <ruanproject01@gmail.com>
-Date: Tue, 6 Oct 2026 19:10:56 +0530
+Date: Mon, 12 Oct 2026 17:52:18 +0530
 Subject: [PATCH] PowerManagerService: Debounce wired charging feedback
 
 Some USB PD chargers drop VBUS once while they negotiate the contract.
@@ -15,10 +15,10 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
  1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/services/core/java/com/android/server/power/PowerManagerService.java b/services/core/java/com/android/server/power/PowerManagerService.java
-index cd3fb9a..81b678d 100644
+index a76aeb6..7220a2c 100644
 --- a/services/core/java/com/android/server/power/PowerManagerService.java
 +++ b/services/core/java/com/android/server/power/PowerManagerService.java
-@@ -496,6 +496,15 @@ public final class PowerManagerService extends SystemService
+@@ -491,6 +491,15 @@ public final class PowerManagerService extends SystemService
      // The current plug type, such as BatteryManager.BATTERY_PLUGGED_WIRELESS.
      private int mPlugType;
  
@@ -34,13 +34,13 @@ index cd3fb9a..81b678d 100644
      // The current battery level percentage.
      private int mBatteryLevel;
  
-@@ -2967,12 +2976,18 @@ public final class PowerManagerService extends SystemService
+@@ -2971,12 +2980,18 @@ public final class PowerManagerService extends SystemService
                  if (mBootCompleted) {
                      if (mIsPowered && !BatteryManager.isPlugWired(oldPlugType)
                              && BatteryManager.isPlugWired(mPlugType)) {
--                        mNotifier.onWiredChargingStarted(mUserId);
+-                        mNotifier.onWiredChargingStarted(mBatteryLevel, mUserId);
 +                        if (now - mLastWiredUnplugTime > WIRED_CHARGING_FEEDBACK_DEBOUNCE_MS) {
-+                            mNotifier.onWiredChargingStarted(mUserId);
++                            mNotifier.onWiredChargingStarted(mBatteryLevel, mUserId);
 +                        }
 +                        mLastWiredPlugTime = now;
                      } else if (wasPowered && !mIsPowered) {
