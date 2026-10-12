@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="lunaris_device_message">Redmi Pad Pro 5G / POCO Pad 5G</string>
+    <string name="lunaris_processor_code_message">Snapdragon® 7s Gen 2</string>
+    <string name="lunaris_battery_type_message">10000 mAh</string>
+    <string name="lunaris_screen_message">12.1\" 2.5K LCD 120Hz</string>
+</resources>

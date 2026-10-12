@@ -9,25 +9,19 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 TARGET_SUPPORTS_OMX_SERVICE := false
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common AxionOS / LineageOS stuff.
+# Lunaris
+WITH_GMS := true
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.lunaris.maintainer=4-8-2-1-1-7
+
+# Inherit some common Lunaris / LineageOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_tablet.mk)
 
 # Inherit from ruan device
 $(call inherit-product, device/xiaomi/ruan/device.mk)
 
-# AxionOS Config
-AXION_MAINTAINER := 4-8-2-1-1-7
-AXION_PROCESSOR := Snapdragon®_7s_Gen_2
-AXION_CAMERA_REAR_INFO := 10MP
-AXION_CAMERA_FRONT_INFO := 8MP
-AXION_CPU_SMALL_CORES := 0,1,2,3
-AXION_CPU_BIG_CORES := 4,5,6,7
-AXION_CPU_BG := 0-2
-AXION_CPU_FG := 0-7
-
 TARGET_BOOT_ANIMATION_RES := 1600
 TARGET_BUILD_APERTURE_CAMERA := true
-TARGET_DISABLE_EPPE := true
 
 PRODUCT_NAME := lineage_ruan
 PRODUCT_DEVICE := ruan
