@@ -6,7 +6,6 @@
 <manifest>
   <!-- Remotes -->
   <remote name="ruan-dev" fetch="https://github.com/noble6/" />
-  <remote name="evo-devices" fetch="https://github.com/Evolution-X-Devices/" />
   <remote name="github-non-los" fetch="https://github.com/" />
   <remote name="nekoshirro" fetch="https://github.com/nekoshirro/" />
 
@@ -23,12 +22,12 @@
   <project path="kernel/xiaomi/sm7435" name="kernel_xiaomi_ruan" remote="ruan-dev" revision="axion" clone-depth="1" />
 
   <!-- Techpack UAPI headers for QTI HALs -->
-  <project path="kernel/xiaomi/sm7435-modules" name="kernel_xiaomi_garnet-modules" remote="evo-devices" revision="bka" clone-depth="1" />
+  <project path="kernel/xiaomi/sm7435-modules" name="kernel_xiaomi_garnet-modules" remote="ruan-dev" revision="bka" clone-depth="1" />
 
   <!-- Hardware -->
-  <project path="hardware/xiaomi" name="Evolution-X-Devices/hardware_xiaomi" remote="github-non-los" revision="bka-no-dolby" />
+  <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-23.2" />
   <project path="hardware/dolby" name="android_hardware_dolby" remote="nekoshirro" revision="lunaris" />
 
   <!-- GameBar -->
-  <project path="packages/apps/GameBar" name="packages_apps_GameBar" remote="evo-devices" revision="bka" />
+  <project path="packages/apps/GameBar" name="packages_apps_GameBar" remote="ruan-dev" revision="bka" />
 </manifest>

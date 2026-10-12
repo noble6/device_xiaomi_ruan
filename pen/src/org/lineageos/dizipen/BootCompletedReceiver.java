@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.evolution.dizipen;
+package org.lineageos.dizipen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
