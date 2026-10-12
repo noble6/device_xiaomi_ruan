@@ -17,6 +17,6 @@
         <item>/system_ext/priv-app/DiziPen/DiziPen.apk</item>
     </string-array>
     <string-array name="config_deviceKeyHandlerClasses" translatable="false">
-        <item>org.evolution.dizipen.KeyHandler</item>
+        <item>org.lineageos.dizipen.KeyHandler</item>
     </string-array>
 </resources>

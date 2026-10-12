@@ -4,7 +4,7 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <permissions>
-    <privapp-permissions package="org.evolution.dizipen">
+    <privapp-permissions package="org.lineageos.dizipen">
         <permission name="android.permission.BLUETOOTH_PRIVILEGED" />
     </privapp-permissions>
 </permissions>
