@@ -10,7 +10,7 @@ dontaudit { appdomain bootanim surfaceflinger } vendor_hal_qspmhal_default:binde
 dontaudit vendor_poweroffalarm_app default_android_service:service_manager find;
 # Vendor GL/media code in app processes enumerates all properties.
 dontaudit appdomain property_type:file { getattr map open read };
-# EvoX init.rc clears its /data/adb leftovers; system_server stats the dir.
+# system_server and toolbox look at /data/adb (KernelSU); harmless.
 dontaudit system_server adb_data_file:dir getattr;
 dontaudit toolbox adb_data_file:dir search;
 # Xiaomi's BT and WLAN HALs publish the MACs in ril.oem props for MIUI apps only;
