@@ -100,6 +100,10 @@ service vendor.sensors-hal-multihal /vendor/bin/hw/android.hardware.sensors-serv
 on boot
     exec_background u:r:xiaomi_pen:s0 system system -- /vendor/bin/xiaomi-pen reset
 
+# Bypass charging (Lineage Health): with restrict_chg set, charge the battery at 0 mA.
+on boot
+    write /sys/class/qcom-battery/restrict_cur 0
+
 on property:vendor.pen.state=*
     exec_background u:r:xiaomi_pen:s0 system system -- /vendor/bin/xiaomi-pen ${vendor.pen.state}
 
