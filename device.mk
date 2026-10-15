@@ -187,6 +187,7 @@ PRODUCT_PACKAGES += \
     charger_fw_fstab.qti \
     fstab.qcom \
     init.ruan.rc \
+    init.ruan.axion.rc \
     init.ruan.usb_attach.sh \
     init.qcom.rc \
     init.recovery.qcom.rc \

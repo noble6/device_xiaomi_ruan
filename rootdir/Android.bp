@@ -23,6 +23,13 @@ prebuilt_etc {
     vendor: true,
 }
 
+prebuilt_etc {
+    name: "init.ruan.axion.rc",
+    src: "etc/init.ruan.axion.rc",
+    sub_dir: "init",
+    system_ext_specific: true,
+}
+
 sh_binary {
     name: "init.ruan.usb_attach.sh",
     src: "bin/init.ruan.usb_attach.sh",

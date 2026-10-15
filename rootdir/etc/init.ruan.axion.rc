@@ -1,0 +1,7 @@
+# AxMemoryManager sets vm.swappiness through persist.sys.ax_mem.swappiness
+# (100, or 60 for the camera and games), which init writes when it changes.
+# Xiaomi's init.kernel.post_boot.sh then writes 180 for ruan, and that stuck
+# until the first change. Re-apply Axion's value once post_boot is done.
+# This runs as init: vendor_init may not write /proc/sys/vm.
+on property:vendor.post_boot.parsed=1
+    write /proc/sys/vm/swappiness ${persist.sys.ax_mem.swappiness:-100}
