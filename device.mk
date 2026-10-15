@@ -218,7 +218,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     vendor.lineage.health-service.default
 
-$(call soong_config_set_bool,lineage_health,charging_control_supports_bypass,false)
+# Charging control: restrict_chg caps the battery charge current at restrict_cur
+# (0, set in init.ruan.rc) while the charger keeps powering the device (bypass).
+$(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class/qcom-battery/restrict_chg)
+$(call soong_config_set,lineage_health,charging_control_charging_enabled,0)
+$(call soong_config_set,lineage_health,charging_control_charging_disabled,1)
+$(call soong_config_set_bool,lineage_health,charging_control_supports_bypass,true)
 
 # Media
 PRODUCT_COPY_FILES += \
