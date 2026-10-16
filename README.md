@@ -70,6 +70,9 @@ brunch ruan user
   `RUAN_PREBUILT_KERNEL=true` to use the prebuilt Image instead.
 - Vendor blobs come from HyperOS OS3.0.303.0.WFSMIXM (Global).
 - Redmi Smart Pen and POCO Smart Pen work with pressure. See `pen/`.
+- Kernel logs: /sys/fs/pstore stays empty (the bootloader clears that
+  memory). `tools/ruan_lastlog.py` pulls the last panic from `rawdump` and
+  the logs of previous boots from `oops` over adb (needs root).
 
 ## Credits
 
