@@ -76,6 +76,9 @@ brunch ruan user
 
 ## Credits
 
+Special Thanks to @Madaboutpaws for everything 
 - [g8row](https://github.com/g8row) for the dizi device tree research
   this tree started from
 - The garnet (SM7435) community for the shared platform sources
+
+
