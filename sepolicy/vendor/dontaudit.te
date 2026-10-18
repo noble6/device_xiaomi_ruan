@@ -7,7 +7,6 @@ dontaudit vendor_modprobe self:key write;
 dontaudit vendor_agmservice_qti debugfs:dir r_dir_perms;
 # hwui and SurfaceFlinger probe QTI's QSPM HAL; qcom only dontaudits some callers.
 dontaudit { appdomain bootanim surfaceflinger } vendor_hal_qspmhal_default:binder call;
-dontaudit vendor_poweroffalarm_app default_android_service:service_manager find;
 # Vendor GL/media code in app processes enumerates all properties.
 dontaudit appdomain property_type:file { getattr map open read };
 # system_server and toolbox look at /data/adb (KernelSU); harmless.
