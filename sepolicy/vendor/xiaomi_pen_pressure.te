@@ -4,8 +4,8 @@ type xiaomi_pen_pressure_exec, exec_type, vendor_file_type, file_type;
 init_daemon_domain(xiaomi_pen_pressure)
 
 allow xiaomi_pen_pressure device:dir r_dir_perms;
-# The pen's hidraw node is hidraw_device or, once the QVR rules label it, vendor_qvr_hidraw_device.
-allow xiaomi_pen_pressure { hidraw_device vendor_qvr_hidraw_device }:chr_file { open read ioctl getattr };
+# The pen's hidraw node (qcom no longer labels /dev/hidraw* for QVR on 24.0).
+allow xiaomi_pen_pressure hidraw_device:chr_file { open read ioctl getattr };
 allow xiaomi_pen_pressure vendor_mipp_device:chr_file { open write getattr };
 allow xiaomi_pen_pressure kmsg_device:chr_file w_file_perms;
 # Grab the IC's pen input device and republish it through uinput.
