@@ -63,7 +63,7 @@ public final class PenMonitor implements InputManager.InputDeviceListener {
         for (int id : mInputManager.getInputDeviceIds()) {
             if (isPen(id)) {
                 pen = true;
-                break;
+                enableIfSuppressed(id);
             }
         }
         // Forcing pen input on must not stop the pairer: a forgotten pen
@@ -80,6 +80,21 @@ public final class PenMonitor implements InputManager.InputDeviceListener {
         }
         mConnected = connected;
         SystemProperties.set(PROP_STATE, connected ? "connected" : "disconnected");
+    }
+
+    /**
+     * The pen's Mouse input device shows up a moment before its Keyboard (the
+     * buttons) joins it. Some ROMs (Axion, Lunaris) disable Bluetooth mice whose
+     * Bluetooth class isn't a pointing device right then, which disables the
+     * whole pen and drops its button presses. They do that once per device, so
+     * turning it back on sticks.
+     */
+    private void enableIfSuppressed(int deviceId) {
+        InputDevice device = mInputManager.getInputDevice(deviceId);
+        if (device != null && !device.isEnabled()) {
+            Log.i(TAG, "re-enabling pen input device " + deviceId);
+            mInputManager.enableInputDevice(deviceId);
+        }
     }
 
     @Override
