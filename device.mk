@@ -41,6 +41,11 @@ PRODUCT_PACKAGES += \
 BOARD_SHIPPING_API_LEVEL := 31
 PRODUCT_SHIPPING_API_LEVEL := $(BOARD_SHIPPING_API_LEVEL)
 
+# XiaomiParts and GameBar reach vendor sysfs and props, so they can't be
+# coredomain. Android 17 enforces that for platform apps only on devices
+# launching with it; report it as a warning here.
+PRODUCT_ENFORCE_SELINUX_TREBLE_LABELING := false
+
 # Audio
 $(call soong_config_set, android_hardware_audio, run_64bit, true)
 $(call soong_config_set_bool, android_hardware_audio, skip_speaker_layout_channel_mask_field, true)
