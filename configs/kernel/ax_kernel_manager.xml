@@ -28,6 +28,6 @@
         node="/sys/class/kgsl/kgsl-3d0/devfreq"
         currentNode="/sys/class/kgsl/kgsl-3d0/gpuclk"
         usageNode="/sys/class/kgsl/kgsl-3d0/gpu_busy_percentage"
-        frequencyMultiplier="1000"
-        values="940000,875000,816000,734000,650000,600000,500000,345000,295000" />
+        frequencyMultiplier="1"
+        values="940000000,875000000,816000000,734000000,650000000,600000000,500000000,345000000,295000000" />
 </kernel-manager>
