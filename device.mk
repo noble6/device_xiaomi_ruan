@@ -159,9 +159,6 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_PACKAGES += \
     fastbootd
 
-# GameBar Performance Overlay
-$(call inherit-product, packages/apps/GameBar/gamebar.mk)
-
 # GNSS
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml
@@ -253,7 +250,6 @@ PRODUCT_PACKAGES += \
     CarrierConfigOverlayRuan \
     FrameworkOverlayDizi \
     FrameworkOverlayRuan \
-    GameBarOverlayDizi \
     LauncherOverlayDizi \
     LineageSDKOverlayDizi \
     LineageSettingsOverlayDizi \
