@@ -41,7 +41,7 @@ PRODUCT_PACKAGES += \
 BOARD_SHIPPING_API_LEVEL := 31
 PRODUCT_SHIPPING_API_LEVEL := $(BOARD_SHIPPING_API_LEVEL)
 
-# XiaomiParts and GameBar reach vendor sysfs and props, so they can't be
+# XiaomiParts reaches vendor sysfs and props, so it can't be
 # coredomain. Android 17 enforces that for platform apps only on devices
 # launching with it; report it as a warning here.
 PRODUCT_ENFORCE_SELINUX_TREBLE_LABELING := false
@@ -164,9 +164,6 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_PACKAGES += \
     fastbootd
 
-# GameBar Performance Overlay
-$(call inherit-product, packages/apps/GameBar/gamebar.mk)
-
 # GNSS
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml
@@ -254,7 +251,6 @@ PRODUCT_PACKAGES += \
     CarrierConfigOverlayRuan \
     FrameworkOverlayDizi \
     FrameworkOverlayRuan \
-    GameBarOverlayDizi \
     LauncherOverlayDizi \
     LineageSDKOverlayDizi \
     LineageSettingsOverlayDizi \
