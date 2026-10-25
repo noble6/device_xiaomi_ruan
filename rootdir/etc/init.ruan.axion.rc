@@ -5,3 +5,14 @@
 # This runs as init: vendor_init may not write /proc/sys/vm.
 on property:vendor.post_boot.parsed=1
     write /proc/sys/vm/swappiness ${persist.sys.ax_mem.swappiness:-100}
+
+# Ax Kernel Manager applies these from system_server, which runs as system.
+on post-fs-data
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
