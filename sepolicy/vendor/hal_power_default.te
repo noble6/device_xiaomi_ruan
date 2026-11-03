@@ -13,3 +13,6 @@ allow hal_power_default { appdomain system_server surfaceflinger }:process { get
 # input device (power/power-mode.cpp).
 allow hal_power_default input_device:dir r_dir_perms;
 allow hal_power_default input_device:chr_file rw_file_perms;
+
+# libperfmgr holds /dev/cpu_dma_latency (powerhint.json) and retried twice a second.
+allow hal_power_default vendor_latency_device:chr_file rw_file_perms;
