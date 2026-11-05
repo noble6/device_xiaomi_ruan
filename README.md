@@ -19,6 +19,7 @@ Also boots on the Redmi Pad Pro / POCO Pad (dizi).
 - `lunaris`: Lunaris AOSP 16.2
 - `lineage-24.0`: LineageOS 24.0 (Android 17)
 - `crdroid`: crDroid 17.0 (Android 17)
+- `infinity`: Project Infinity X 17 (Android 17)
 
 ## Building
 
@@ -26,7 +27,7 @@ Put `manifest/ruan.xml` in `.repo/local_manifests/` and sync. Then apply
 the patches in `patches/` to their projects:
 
 ```
-for d in build/make frameworks/base frameworks/native vendor/lineage; do
+for d in build/make frameworks/base frameworks/native vendor/infinity; do
   (cd $d && git am -3 $ANDROID_BUILD_TOP/device/xiaomi/ruan/patches/$d/*.patch)
 done
 ```
@@ -60,6 +61,14 @@ crDroid (use the `crdroid` branch's manifest):
 ```
 . build/envsetup.sh
 brunch ruan user
+```
+
+Project Infinity X (use the `infinity` branch's manifest):
+
+```
+. build/envsetup.sh
+lunch infinity_ruan-cp2a-user
+m bacon
 ```
 
 ## Notes
