@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- crDroid's About phone shows this one on builds not signed with its official keys. -->
+    <string name="build_maintainer_unofficial" translatable="false">4-8-2-1-1-7</string>
+    <string name="build_maintainer_summary" translatable="false">4-8-2-1-1-7</string>
+</resources>
