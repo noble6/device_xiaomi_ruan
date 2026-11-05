@@ -241,3 +241,6 @@ persist.vendor.vcb.enable=false
 
 # WLAN
 wifi.aware.interface=wifi-aware0
+
+# Blur: lighter dual-filter Kawase, for this GPU
+debug.renderengine.blur_algorithm=kawase_darkmoon
