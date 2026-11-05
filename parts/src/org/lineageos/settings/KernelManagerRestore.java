@@ -7,6 +7,8 @@ package org.lineageos.settings;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemProperties;
 import android.provider.Settings;
 
@@ -28,21 +30,26 @@ final class KernelManagerRestore {
         "axion_min_freq_big",
     };
 
-    private static boolean sRestored;
+    private static final long POLL_INTERVAL_MS = 1000;
+    private static final int MAX_POLLS = 180;
 
     private KernelManagerRestore() {}
 
     static void run(Context context) {
-        ContentResolver resolver = context.getApplicationContext().getContentResolver();
-        SystemProperties.addChangeCallback(() -> restoreIfReady(resolver));
-        restoreIfReady(resolver);
+        // SystemProperties.addChangeCallback() doesn't report properties set by init, so poll.
+        poll(context.getApplicationContext().getContentResolver(),
+                new Handler(Looper.getMainLooper()), MAX_POLLS);
     }
 
-    private static synchronized void restoreIfReady(ContentResolver resolver) {
-        if (sRestored || !SystemProperties.getBoolean(PROP_POST_BOOT_DONE, false)) {
-            return;
+    private static void poll(ContentResolver resolver, Handler handler, int pollsLeft) {
+        if (SystemProperties.getBoolean(PROP_POST_BOOT_DONE, false)) {
+            restore(resolver);
+        } else if (pollsLeft > 0) {
+            handler.postDelayed(() -> poll(resolver, handler, pollsLeft - 1), POLL_INTERVAL_MS);
         }
-        sRestored = true;
+    }
+
+    private static void restore(ContentResolver resolver) {
         for (String key : KEYS) {
             // The manager writes its default when a setting is unset, which isn't walt.
             if (Settings.Secure.getString(resolver, key) != null) {
