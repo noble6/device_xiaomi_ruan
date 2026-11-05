@@ -62,6 +62,9 @@ crDroid (use the `crdroid` branch's manifest):
 brunch ruan user
 ```
 
+For GApps, add MindTheGapps (`cinnamonbun`) as `vendor/gapps`, run `git lfs pull`
+there, apply `patches/vendor/gapps`, and `export WITH_GMS=true` before building.
+
 ## Notes
 
 - The kernel is built from source (`kernel/xiaomi/sm7435`, Xiaomi's
