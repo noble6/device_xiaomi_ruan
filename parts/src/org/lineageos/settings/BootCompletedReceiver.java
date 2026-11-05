@@ -52,6 +52,8 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         try {
             // Make sure the panel really runs the active refresh rate.
             RefreshRateKick.run(context);
+            // Keep Kernel Manager's choices after post_boot.
+            KernelManagerRestore.run(context);
             // Start necessary services
             startServices(context);
         } catch (Exception e) {
