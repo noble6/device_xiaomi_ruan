@@ -9,8 +9,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 TARGET_SUPPORTS_OMX_SERVICE := false
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common Project Infinity X stuff.
-$(call inherit-product, vendor/infinity/config/common_full_tablet.mk)
+# Inherit some common Clover stuff.
+$(call inherit-product, vendor/clover/config/common_full_tablet.mk)
 
 # Inherit from ruan device
 $(call inherit-product, device/xiaomi/ruan/device.mk)
@@ -18,7 +18,7 @@ $(call inherit-product, device/xiaomi/ruan/device.mk)
 TARGET_BOOT_ANIMATION_RES := 1600
 TARGET_BUILD_APERTURE_CAMERA := true
 
-PRODUCT_NAME := infinity_ruan
+PRODUCT_NAME := clover_ruan
 PRODUCT_DEVICE := ruan
 PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_BRAND := Redmi
@@ -35,6 +35,5 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
-# Project Infinity X
-INFINITY_MAINTAINER := "4-8-2-1-1-7"
-WITH_GAPPS ?= true
+# Clover
+CLOVER_MAINTAINER := 4-8-2-1-1-7

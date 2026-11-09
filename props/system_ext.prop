@@ -21,7 +21,3 @@ ro.launcher.depth.overview=false
 
 # Radio
 telephony.active_modems.max_count=2
-
-# Project Infinity X: About phone
-ro.infinity.soc=Snapdragon 7s Gen 2
-ro.infinity.camera=8MP
