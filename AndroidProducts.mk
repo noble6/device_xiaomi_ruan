@@ -5,4 +5,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/infinity_ruan.mk
+    $(LOCAL_DIR)/clover_ruan.mk

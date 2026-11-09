@@ -20,6 +20,7 @@ Also boots on the Redmi Pad Pro / POCO Pad (dizi).
 - `lineage-24.0`: LineageOS 24.0 (Android 17)
 - `crdroid`: crDroid 17.0 (Android 17)
 - `infinity`: Project Infinity X 17 (Android 17)
+- `clover`: The Clover Project 17 (Android 17)
 
 ## Building
 
@@ -27,7 +28,7 @@ Put `manifest/ruan.xml` in `.repo/local_manifests/` and sync. Then apply
 the patches in `patches/` to their projects:
 
 ```
-for d in build/make frameworks/base frameworks/native vendor/infinity; do
+for d in build/make frameworks/base frameworks/native vendor/clover; do
   (cd $d && git am -3 $ANDROID_BUILD_TOP/device/xiaomi/ruan/patches/$d/*.patch)
 done
 ```
@@ -69,6 +70,15 @@ Project Infinity X (use the `infinity` branch's manifest):
 . build/envsetup.sh
 lunch infinity_ruan-cp2a-user
 m bacon
+```
+
+The Clover Project (use the `clover` branch's manifest; signing keys go in
+`vendor/clover-priv/keys`; charging control isn't available there):
+
+```
+. build/envsetup.sh
+lunch clover_ruan-cp2a-user
+mka clover
 ```
 
 ## Notes

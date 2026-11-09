@@ -10,7 +10,7 @@
   <remote name="nekoshirro" fetch="https://github.com/nekoshirro/" />
 
   <!-- Device tree -->
-  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="infinity" />
+  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="clover" />
 
   <!-- Prebuilt stock vendor modules, dtb (+ stock Image as fallback) -->
   <project path="device/xiaomi/ruan-kernel" name="device_xiaomi_ruan-kernel" remote="ruan-dev" revision="axion" />
@@ -26,5 +26,7 @@
 
   <!-- Hardware -->
   <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-24.0" />
+  <!-- Clover syncs only some of LineageOS: the power HAL comes from here -->
+  <project path="hardware/lineage/interfaces" name="LineageOS/android_hardware_lineage_interfaces" remote="github-non-los" revision="lineage-24.0" />
   <project path="hardware/dolby" name="android_hardware_dolby" remote="nekoshirro" revision="lunaris" />
 </manifest>
