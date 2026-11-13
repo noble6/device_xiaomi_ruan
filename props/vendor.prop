@@ -198,9 +198,6 @@ debug.stagefright.c2inputsurface=-1
 debug.sdm.support_writeback=0
 ro.media.xml_variant.profiles=_parrot_v0
 
-# Media (Dolby)
-ro.vendor.audio.dolby.dax.support=true
-ro.vendor.audio.dolby.surround.enable=true
 
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so

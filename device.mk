@@ -148,10 +148,18 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     hardware/qcom-caf/sm8450/display/config/snapdragon_color_libs_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/snapdragon_color_libs_config.xml
 
-# Dolby
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/dolby/vendor.dolbyvision.media.c2@1.0-service.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/vendor.dolbyvision.media.c2@1.0-service.rc
-$(call inherit-product, hardware/dolby/dolby.mk)
+# Codec2 vendor libraries (hardware/dolby used to bring these in;
+# the QTI audio codecs need them). Sound effects come from Resona (Strand).
+PRODUCT_PACKAGES += \
+    android.hardware.media.c2@1.0.vendor \
+    android.hardware.media.c2@1.1.vendor \
+    android.hardware.media.c2@1.2.vendor \
+    libcodec2_hidl@1.2.vendor \
+    libcodec2_soft_common.vendor \
+    libsfplugin_ccodec_utils.vendor
+
+PRODUCT_VENDOR_PROPERTIES += \
+    vendor.audio.c2.preferred=true
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -420,6 +428,10 @@ PRODUCT_COPY_FILES += \
 
 # Strand engine (vendor/strand, see manifest/ruan.xml)
 STRAND_DEVICE_CONFIG := $(LOCAL_PATH)/configs/strand/device.conf
+# Factory speaker calibration for Resona, made from the stock Dolby tuning:
+#   vendor/strand/audio/tools/dax2resona.py .../vendor/etc/dolby/dax-default.xml
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/strand/resona_speaker.json:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/strand/resona_speaker.json
 $(call inherit-product-if-exists, vendor/strand/strand.mk)
 
 # Vendor blobs
