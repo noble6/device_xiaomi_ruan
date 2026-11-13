@@ -26,7 +26,6 @@
 
   <!-- Hardware -->
   <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-24.0" />
-  <project path="hardware/dolby" name="android_hardware_dolby" remote="nekoshirro" revision="lunaris" />
 
   <!-- Strand engine (performance daemon, app, blur) -->
   <project path="vendor/strand" name="strand" remote="ruan-dev" revision="main" />
