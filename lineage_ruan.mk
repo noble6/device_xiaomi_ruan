@@ -18,6 +18,8 @@ $(call inherit-product, device/xiaomi/ruan/device.mk)
 # Build GApps in: the partitions are EROFS, so recovery can't add them later.
 ifeq ($(WITH_GMS),true)
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+# Google's setup runs; Lineage's would make the user pick between the two
+PRODUCT_PACKAGES += RemoveLineageSetupWizard
 endif
 
 TARGET_BOOT_ANIMATION_RES := 1600

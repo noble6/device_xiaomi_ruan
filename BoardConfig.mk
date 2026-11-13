@@ -129,13 +129,6 @@ BOARD_BOOTCONFIG := \
     androidboot.memcg=1 \
     androidboot.usbcontroller=a600000.dwc3
 
-# Bring-up of debug builds: SELinux permissive (denials are still logged)
-# so the /metadata logger runs and a broken policy can't hide a boot
-# problem. Remove once the build is stable. User builds stay enforcing.
-ifneq ($(TARGET_BUILD_VARIANT),user)
-BOARD_BOOTCONFIG += androidboot.selinux=permissive
-endif
-
 # Kernel modules
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(KERNEL_PATH)/modules/vendor_ramdisk/*.ko)
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/vendor_ramdisk/modules.load))

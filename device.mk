@@ -430,10 +430,6 @@ PRODUCT_COPY_FILES += \
 # setup wizard can't lock adb out (user builds don't get it)
 ifneq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_ADB_KEYS := $(LOCAL_PATH)/adb_keys
-# Live logs to /metadata/bootlog, readable from recovery (debug/)
-PRODUCT_PACKAGES += \
-    init.ruan.bootlog.rc \
-    ruan_bootlog.sh
 # Big enough log buffers that a whole first boot stays in them
 PRODUCT_SYSTEM_PROPERTIES += \
     ro.logd.size=16M
