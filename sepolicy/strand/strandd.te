@@ -1,0 +1,2 @@
+# Battery stats for Strand's health page
+r_dir_file(strandd, vendor_sysfs_battery_supply)
