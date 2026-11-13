@@ -426,6 +426,12 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/tablet_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/tablet_core_hardware.xml \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-dizipen.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-dizipen.xml
 
+# Debug builds trust the maintainer's adb key from first boot, so a broken
+# setup wizard can't lock adb out (user builds don't get it)
+ifneq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_ADB_KEYS := $(LOCAL_PATH)/adb_keys
+endif
+
 # Strand engine (vendor/strand, see manifest/ruan.xml)
 STRAND_DEVICE_CONFIG := $(LOCAL_PATH)/configs/strand/device.conf
 # Factory speaker calibration for Resona, made from the stock Dolby tuning:
