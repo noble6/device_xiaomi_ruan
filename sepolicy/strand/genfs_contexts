@@ -1,0 +1,4 @@
+# GPU load and clock for strandd's stats and heavy-GPU detection (core
+# domains may not read unlabelled sysfs)
+genfscon sysfs /devices/platform/soc/3d00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/gpu_busy_percentage u:object_r:vendor_sysfs_kgsl:s0
+genfscon sysfs /devices/platform/soc/3d00000.qcom,kgsl-3d0/devfreq/3d00000.qcom,kgsl-3d0/cur_freq u:object_r:vendor_sysfs_kgsl:s0
