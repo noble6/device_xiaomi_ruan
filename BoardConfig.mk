@@ -79,6 +79,9 @@ DEVICE_MANIFEST_FILE += \
 DEVICE_FRAMEWORK_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/framework_manifest.xml
 
 # Kernel
+# Kernel make jobs (patches/vendor/lineage/0002): full width on a shared
+# build server gets the build killed
+KERNEL_JOBS ?= 32
 # The GKI Image is built from source (kernel/xiaomi/sm7435, Xiaomi ruan-u-oss)
 # with the GKI compiler, so its symbol CRCs match the stock
 # vendor modules and dtb below, which stay prebuilt.
