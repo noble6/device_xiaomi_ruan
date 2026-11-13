@@ -596,6 +596,30 @@
             "Value": "600000000"
         },
         {
+            "PowerHint": "FIXED_PERFORMANCE",
+            "Node": "sysKernelMsmPerformanceParametersCpuMinFreq",
+            "Duration": 0,
+            "Value": "0:1497600 1:1497600 2:1497600 3:1497600 4:1497600 5:1497600 6:1497600 7:1497600"
+        },
+        {
+            "PowerHint": "FIXED_PERFORMANCE",
+            "Node": "sysClassKgslKgsl3d0DevfreqMinFreq",
+            "Duration": 0,
+            "Value": "600000000"
+        },
+        {
+            "PowerHint": "LOW_POWER",
+            "Node": "sysKernelMsmPerformanceParametersCpuMaxFreq",
+            "Duration": 0,
+            "Value": "0:1958400 1:1958400 2:1958400 3:1958400 4:1900800 5:1900800 6:1900800 7:1900800"
+        },
+        {
+            "PowerHint": "LOW_POWER",
+            "Node": "sysClassKgslKgsl3d0DevfreqMaxFreq",
+            "Duration": 0,
+            "Value": "500000000"
+        },
+        {
             "PowerHint": "EXPENSIVE_RENDERING",
             "Node": "sysClassKgslKgsl3d0DevfreqMinFreq",
             "Duration": 0,

@@ -418,5 +418,9 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/tablet_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/tablet_core_hardware.xml \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-dizipen.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-dizipen.xml
 
+# Strand engine (vendor/strand, see manifest/ruan.xml)
+STRAND_DEVICE_CONFIG := $(LOCAL_PATH)/configs/strand/device.conf
+$(call inherit-product-if-exists, vendor/strand/strand.mk)
+
 # Vendor blobs
 $(call inherit-product, vendor/xiaomi/ruan/ruan-vendor.mk)
