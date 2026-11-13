@@ -1,2 +1,6 @@
 # Battery stats for Strand's health page
 r_dir_file(strandd, vendor_sysfs_battery_supply)
+
+# GPU load (heavy-GPU quiet mode) and clock, labelled in genfs_contexts
+allow strandd vendor_sysfs_kgsl:dir search;
+allow strandd vendor_sysfs_kgsl:file r_file_perms;
