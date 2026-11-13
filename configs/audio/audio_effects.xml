@@ -85,6 +85,8 @@
         <!--DOLBY SPATIALIZER-->
         <library name="spatializer" path="libswspatializer.so"/>
         <!--DOLBY END-->
+        <!--RESONA (vendor/strand/audio)-->
+        <library name="resona" path="libresonafx.so"/>
     </libraries>
     <effects>
         <effectProxy name="bassboost" library="proxy" uuid="14804144-a5ee-4d24-aa88-0002a5d5c51b">
@@ -148,6 +150,8 @@
         <!--DOLBY SPATIALIZER-->
         <effect name="spatializer" library="spatializer" uuid="ccd4cf09-a79d-46c2-9aae-06a1698d6c8f"/>
         <!--DOLBY END-->
+        <!--RESONA-->
+        <effect name="resona" library="resona" uuid="2f3c6d81-5b0e-4c7a-9e14-5245534f4e41"/>
     </effects>
     <postprocess>
         <stream type="voice_call">
