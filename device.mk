@@ -434,6 +434,9 @@ PRODUCT_ADB_KEYS := $(LOCAL_PATH)/adb_keys
 PRODUCT_PACKAGES += \
     init.ruan.bootlog.rc \
     ruan_bootlog.sh
+# Big enough log buffers that a whole first boot stays in them
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.logd.size=16M
 endif
 
 # Strand engine (vendor/strand, see manifest/ruan.xml)

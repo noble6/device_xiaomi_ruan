@@ -16,7 +16,7 @@
   <project path="device/xiaomi/ruan-kernel" name="device_xiaomi_ruan-kernel" remote="ruan-dev" revision="axion" />
 
   <!-- Vendor blobs (from ruan HyperOS OS3.0.303.0.WFSMIXM) -->
-  <project path="vendor/xiaomi/ruan" name="vendor_xiaomi_ruan-" remote="ruan-dev" revision="axion" />
+  <project path="vendor/xiaomi/ruan" name="vendor_xiaomi_ruan-" remote="ruan-dev" revision="lineage-24.0" />
 
   <!-- Kernel source (Xiaomi ruan-u-oss) -->
   <project path="kernel/xiaomi/sm7435" name="kernel_xiaomi_ruan" remote="ruan-dev" revision="axion" clone-depth="1" />
