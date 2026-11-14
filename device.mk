@@ -449,3 +449,7 @@ $(call inherit-product-if-exists, vendor/strand/strand.mk)
 
 # Vendor blobs
 $(call inherit-product, vendor/xiaomi/ruan/ruan-vendor.mk)
+
+# Maintainer, shown in Strand > Updates
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.strand.maintainer=4-8-2-1-1-7
