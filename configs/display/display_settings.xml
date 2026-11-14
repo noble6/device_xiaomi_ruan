@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--
+    Android 16+ ignores orientation requests on large screens (sw >= 600dp),
+    so games that lock themselves to landscape open in portrait when the
+    tablet lies flat or was in portrait at launch. Honor them again on the
+    built-in panel (port 130); everything else still follows auto-rotate.
+-->
+<display-settings>
+    <config identifier="1" />
+    <display name="port:130" ignoreOrientationRequest="false" />
+</display-settings>
