@@ -79,7 +79,7 @@ PRODUCT_PACKAGES += \
     libsndcardparser \
     libvolumelistener
 
-AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/primary-hal
+AUDIO_HAL_DIR := hardware/qcom-caf/sm8450-6.6/audio/primary-hal
 
 # Display: honor app orientation requests on the built-in panel
 PRODUCT_COPY_FILES += \
@@ -143,14 +143,24 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     XiaomiParts
 
-# Display
+# Display (parrot 6.6 HALs)
 PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@4.0-impl-qti-display \
+    mapper.qti \
     vendor.qti.hardware.display.allocator-service \
-    vendor.qti.hardware.display.composer-service
+    vendor.qti.hardware.display.composer-service \
+    vendor.qti.hardware.display.snapalloc-impl
 
+DISPLAY_CORE_66 := hardware/qcom-caf/sm8450-6.6/display/core
 PRODUCT_COPY_FILES += \
-    hardware/qcom-caf/sm8450/display/config/snapdragon_color_libs_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/snapdragon_color_libs_config.xml
+    $(DISPLAY_CORE_66)/config/sdm_display_resolution_extn.xml:$(TARGET_COPY_OUT_VENDOR)/etc/display/sdm_display_resolution_extn.xml \
+    $(foreach f,camera cpu default display graphics ubwc video, \
+        $(DISPLAY_CORE_66)/snapalloc/resources/$(f)_alignments.json:$(TARGET_COPY_OUT_VENDOR)/etc/display/$(f)_alignments.json) \
+    $(DISPLAY_CORE_66)/snapalloc/resources/formats.json:$(TARGET_COPY_OUT_VENDOR)/etc/display/formats.json
+
+# Camera: CamX format shim for the parrot 6.6 (PDX257) libcamximageformatutils
+PRODUCT_PACKAGES += \
+    libcamximageformatutils_shim
 
 # Codec2 vendor libraries (hardware/dolby used to bring these in;
 # the QTI audio codecs need them). Sound effects come from Resona (Strand).
