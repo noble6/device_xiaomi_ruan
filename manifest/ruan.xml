@@ -10,19 +10,15 @@
   <remote name="nekoshirro" fetch="https://github.com/nekoshirro/" />
 
   <!-- Device tree -->
-  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="lineage-24.0" />
-
-  <!-- Prebuilt stock vendor modules, dtb (+ stock Image as fallback) -->
-  <project path="device/xiaomi/ruan-kernel" name="device_xiaomi_ruan-kernel" remote="ruan-dev" revision="axion" />
+  <project path="device/xiaomi/ruan" name="device_xiaomi_ruan" remote="ruan-dev" revision="lineage-24.0-6.6" />
 
   <!-- Vendor blobs (from ruan HyperOS OS3.0.303.0.WFSMIXM) -->
-  <project path="vendor/xiaomi/ruan" name="vendor_xiaomi_ruan-" remote="ruan-dev" revision="lineage-24.0" />
+  <project path="vendor/xiaomi/ruan" name="vendor_xiaomi_ruan-" remote="ruan-dev" revision="lineage-24.0-6.6" />
 
-  <!-- Kernel source (Xiaomi ruan-u-oss) -->
-  <project path="kernel/xiaomi/sm7435" name="kernel_xiaomi_ruan" remote="ruan-dev" revision="axion" clone-depth="1" />
-
-  <!-- Techpack UAPI headers for QTI HALs -->
-  <project path="kernel/xiaomi/sm7435-modules" name="kernel_xiaomi_garnet-modules" remote="ruan-dev" revision="bka" clone-depth="1" />
+  <!-- Linux 6.6 (LineageOS Qualcomm 6.6 via crDroid garnet, ruan-6.6) -->
+  <project path="kernel/xiaomi/sm7435" name="kernel_xiaomi_ruan" remote="ruan-dev" revision="ruan-6.6" clone-depth="1" />
+  <project path="kernel/xiaomi/sm7435-modules" name="kernel_xiaomi_ruan-modules" remote="ruan-dev" revision="ruan-6.6" clone-depth="1" />
+  <project path="kernel/xiaomi/sm7435-devicetrees" name="kernel_xiaomi_ruan-devicetrees" remote="ruan-dev" revision="ruan-6.6" clone-depth="1" />
 
   <!-- Hardware -->
   <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="github-non-los" revision="lineage-24.0" />

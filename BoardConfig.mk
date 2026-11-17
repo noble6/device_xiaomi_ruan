@@ -73,21 +73,15 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
 DEVICE_MANIFEST_FILE += \
     $(DEVICE_PATH)/configs/hidl/manifest.xml \
     $(DEVICE_PATH)/configs/hidl/manifest_ruan.xml \
-    hardware/qcom-caf/sm8450/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
-    hardware/qcom-caf/sm8450/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
+    hardware/qcom-caf/sm8450-6.6/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
+    hardware/qcom-caf/sm8450-6.6/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
 
 DEVICE_FRAMEWORK_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/framework_manifest.xml
 
 # Kernel
-# Kernel make jobs: every core by default. If a shared build server's
-# watchdog kills the build, cap it here (patches/vendor/lineage/0002), e.g.
-# KERNEL_JOBS := 32
-# The GKI Image is built from source (kernel/xiaomi/sm7435, Xiaomi ruan-u-oss)
-# with the GKI compiler, so its symbol CRCs match the stock
-# vendor modules and dtb below, which stay prebuilt.
-# Build with RUAN_PREBUILT_KERNEL=true to use the stock prebuilt Image instead.
-KERNEL_PATH := $(DEVICE_PATH)-kernel
-
+# Linux 6.6 built from source: kernel/xiaomi/sm7435 (6.6.144, ruan-6.6),
+# its vendor modules from kernel/xiaomi/sm7435-modules and the device tree
+# from kernel/xiaomi/sm7435-devicetrees (board-id 0x3000b 1).
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_IMAGE_NAME := Image
@@ -96,20 +90,15 @@ BOARD_RAMDISK_USE_LZ4 := true
 TARGET_KERNEL_SOURCE := kernel/xiaomi/sm7435
 TARGET_KERNEL_CONFIG := \
     gki_defconfig \
-    vendor/ruan_rom.config
-TARGET_KERNEL_CLANG_PATH := $(abspath prebuilts/clang/kernel/linux-x86/clang-r416183b)
-# 5.10 only passes --target to clang when CROSS_COMPILE is set, and Lineage
-# leaves it empty for clang-only builds; with LLVM=1 it is used for nothing else.
-TARGET_KERNEL_ADDITIONAL_FLAGS := CROSS_COMPILE=aarch64-linux-gnu-
-ifeq ($(RUAN_PREBUILT_KERNEL),true)
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image
-endif
+    vendor/parrot_GKI.config \
+    vendor/ruan_GKI.config \
+    vendor/debugfs.config
+TARGET_KERNEL_CLANG_VERSION := r563880c
+TARGET_KERNEL_ADDITIONAL_FLAGS := TARGET_PRODUCT=ruan
 
-# ruan ships its own dtbo.img (the dizi ROM's ruan entry lacked camera nodes)
-BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtb
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilts/dtbo.img
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+TARGET_NEEDS_DTBOIMAGE := true
+BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS := --header_version $(BOARD_BOOT_HEADER_VERSION)
@@ -124,19 +113,60 @@ BOARD_KERNEL_CMDLINE := \
     swinfo.fingerprint=$(LINEAGE_VERSION) \
     androidboot.init_fatal_reboot_target=recovery
 
+# DEBUG ONLY (bring-up): keep the clocks and power domains that no driver
+# claimed yet, as garnet does on 6.6. Remove once 6.6 is known to work
+# without them.
+BOARD_KERNEL_CMDLINE += \
+    clk_ignore_unused \
+    pd_ignore_unused
+
 BOARD_BOOTCONFIG := \
     androidboot.hardware=qcom \
     androidboot.memcg=1 \
     androidboot.usbcontroller=a600000.dwc3
 
 # Kernel modules
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(KERNEL_PATH)/modules/vendor_ramdisk/*.ko)
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/vendor_ramdisk/modules.load))
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/vendor_ramdisk/modules.load.recovery))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(KERNEL_PATH)/modules/vendor_ramdisk/modules.blocklist
-BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(KERNEL_PATH)/modules/vendor_dlkm/*.ko)
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/vendor_dlkm/modules.load))
-BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(KERNEL_PATH)/modules/vendor_dlkm/modules.blocklist
+TARGET_KERNEL_EXT_MODULE_ROOT := kernel/xiaomi/sm7435-modules
+TARGET_KERNEL_EXT_MODULES := \
+	qcom/opensource/mmrm-driver \
+	qcom/opensource/audio-kernel \
+	qcom/opensource/camera-kernel \
+	qcom/opensource/datarmnet-ext/mem \
+	qcom/opensource/dataipa/drivers/platform/msm \
+	qcom/opensource/datarmnet/core \
+	qcom/opensource/datarmnet-ext/aps \
+	qcom/opensource/datarmnet-ext/offload \
+	qcom/opensource/datarmnet-ext/shs \
+	qcom/opensource/datarmnet-ext/perf \
+	qcom/opensource/datarmnet-ext/perf_tether \
+	qcom/opensource/datarmnet-ext/sch \
+	qcom/opensource/datarmnet-ext/wlan \
+	qcom/opensource/securemsm-kernel \
+	qcom/opensource/mm-drivers/msm_ext_display \
+	qcom/opensource/mm-drivers/sync_fence \
+	qcom/opensource/synx-kernel-v1 \
+	qcom/opensource/display-drivers/msm \
+	qcom/opensource/graphics-kernel \
+	qcom/opensource/bt-kernel \
+	qcom/opensource/dsp-kernel \
+	qcom/opensource/touch-drivers \
+	qcom/opensource/video-driver \
+	qcom/opensource/wlan/platform \
+	qcom/opensource/wlan/qcacld-3.0/.qca6750 \
+	nxp/opensource/driver
+
+first_stage_modules := $(strip $(shell if [ -f $(TARGET_KERNEL_SOURCE)/modules.list.msm.parrot ]; then cat $(TARGET_KERNEL_SOURCE)/modules.list.msm.parrot | grep -v '^\s*#' | grep -v '^\s*$$'; fi) $(shell if [ -f $(DEVICE_PATH)/modules/modules.list.first_stage ]; then cat $(DEVICE_PATH)/modules/modules.list.first_stage | grep -v '^\s*#' | grep -v '^\s*$$'; fi))
+second_stage_modules := $(strip $(shell if [ -f $(DEVICE_PATH)/modules/modules.list.second_stage ]; then cat $(DEVICE_PATH)/modules/modules.list.second_stage | grep -v '^\s*#' | grep -v '^\s*$$'; fi))
+vendor_dlkm_modules := $(strip $(shell if [ -f $(DEVICE_PATH)/modules/modules.list.vendor_dlkm ]; then cat $(DEVICE_PATH)/modules/modules.list.vendor_dlkm | grep -v '^\s*#' | grep -v '^\s*$$'; fi))
+
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(first_stage_modules)
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(first_stage_modules) $(second_stage_modules)
+BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.parrot
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(second_stage_modules) $(vendor_dlkm_modules)
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE)
+BOOT_KERNEL_MODULES := $(first_stage_modules) $(second_stage_modules)
+BOARD_KERNEL_MODULES_LOAD_ALLOW_MISSING := true
+TARGET_AUTO_COLLECT_KERNEL_MODULE_DEPS := true
 
 # Partitions
 -include vendor/lineage/config/BoardConfigReservedSize.mk
@@ -183,8 +213,17 @@ ENABLE_VENDOR_RIL_SERVICE := true
 
 # Sepolicy
 include device/lineage/sepolicy/libperfmgr/sepolicy.mk
+# Must stay above SEPolicy.mk, which picks the policy the 6.6 HALs need
+TARGET_KERNEL_VERSION := 6.6
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 
+# sm8750 only adds its HIDL compat policy on taro. The stock 5.10-era blobs
+# still need it (qseecom, IMS, data, gatekeeper, QCC...). qva/vendor/compat
+# applies as is; generic/vendor/compat clashes with the parrot policy, so a
+# trimmed copy (from garnet) lives in sepolicy/compat.
+BOARD_VENDOR_SEPOLICY_DIRS += \
+    device/qcom/sepolicy_vndr/sm8750/qva/vendor/compat \
+    $(DEVICE_PATH)/sepolicy/compat
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
