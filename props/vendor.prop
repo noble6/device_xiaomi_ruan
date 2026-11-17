@@ -238,3 +238,6 @@ persist.vendor.vcb.enable=false
 
 # WLAN
 wifi.aware.interface=wifi-aware0
+
+# Codec2: the parrot 6.6 (PDX257) video HAL is AIDL
+media.c2.hal.selection=aidl
