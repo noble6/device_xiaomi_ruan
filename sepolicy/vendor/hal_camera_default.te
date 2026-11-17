@@ -1,0 +1,3 @@
+
+# QSPM (parrot 6.6 AIDL service)
+hal_client_domain(hal_camera_default, vendor_hal_qspmhal)
