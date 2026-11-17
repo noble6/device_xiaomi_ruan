@@ -1,0 +1,5 @@
+# Loaded after the kernel's modules.list.msm.parrot.
+tmecom-intf.ko
+qti-fixed-regulator.ko
+qcom-cpufreq-hw.ko
+msm_geni_serial.ko
