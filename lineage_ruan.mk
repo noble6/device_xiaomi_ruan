@@ -15,7 +15,8 @@ $(call inherit-product, vendor/lineage/config/common_full_tablet.mk)
 # Inherit from ruan device
 $(call inherit-product, device/xiaomi/ruan/device.mk)
 
-# Build GApps in: the partitions are EROFS, so recovery can't add them later.
+# Optional built-in GApps (WITH_GMS=true). Without it the build is vanilla
+# and a GApps package can be flashed from recovery afterwards.
 ifeq ($(WITH_GMS),true)
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
 endif
