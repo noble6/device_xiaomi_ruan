@@ -9,6 +9,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 TARGET_SUPPORTS_OMX_SERVICE := false
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
+# Face unlock (crDroid's camera based FaceUnlock, ruan has no OEM one).
+# Set before common_full_tablet.mk: crdroid.mk checks it when included.
+TARGET_FACE_UNLOCK_SUPPORTED := true
+
 # Inherit some common crDroid / LineageOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_tablet.mk)
 
