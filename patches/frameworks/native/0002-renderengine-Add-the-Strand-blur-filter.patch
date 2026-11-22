@@ -1,50 +1,29 @@
-From d394c0c8c852da374164c320689433ac62b317cd Mon Sep 17 00:00:00 2001
+From 9e860ab8ca0d1527a9d6e47686a5ce69ea49f7ab Mon Sep 17 00:00:00 2001
 From: noble6 <ruanproject01@gmail.com>
-Date: Fri, 13 Nov 2026 14:12:24 +0530
+Date: Sat, 14 Nov 2026 04:25:49 +0000
 Subject: [PATCH] renderengine: Add the Strand blur filter
 
-Dual filter Kawase blur with the same look as KawaseBlurDualFilterV2
-(same shaders and radius mapping) that skips work it has already done.
-
-Backdrop cache: SkiaRenderEngine now tells the blur filter which layers
-were drawn below the blurred one. When those layers and the display
-settings match an earlier frame, the input pixels match too, so:
- - same rect and radius: the previous result is returned, no GPU work
- - same rect, new radius: the downsample pyramid is kept and only the
-   upsample passes run
-
-This is the notification shade over a still launcher or app: the shade
-content scrolls and animates, the blurred backdrop doesn't. Layers that
-can change pixels without changing their settings (front buffered,
-command stream) turn the cache off for that frame.
-
-Every pass renders to surfaces kept by the filter, 8-bit and opaque
-unless the input is F16, and discards the old contents when it
-overwrites them. Upsample targets are separate from the pyramid.
-
-sys.strand.blur.lite=1 caps the passes at two for battery and thermal
-profiles. ro.strand.blur.cache=false turns the cache off.
-
-Strand is the default; debug.renderengine.blur_algorithm=kawase2 selects
-KawaseBlurDualFilterV2 again.
+Port of vendor/strand/patches/frameworks/native/0001 to crDroid, next to
+KawaseDarkmoon. Strand is the default; debug.renderengine.blur_algorithm
+kawase2 and kawase_darkmoon still select the others.
 ---
  libs/renderengine/Android.bp                  |   1 +
  .../include/renderengine/RenderEngine.h       |   3 +-
  libs/renderengine/skia/SkiaRenderEngine.cpp   |   9 +
  .../skia/compat/GraphitePipelineManager.cpp   |   1 +
- libs/renderengine/skia/filters/BlurFilter.h   |  10 +
+ libs/renderengine/skia/filters/BlurFilter.h   |   9 +
  .../skia/filters/StrandBlurFilter.cpp         | 346 ++++++++++++++++++
  .../skia/filters/StrandBlurFilter.h           | 138 +++++++
  services/surfaceflinger/SurfaceFlinger.cpp    |   4 +
- 8 files changed, 511 insertions(+), 1 deletion(-)
+ 8 files changed, 510 insertions(+), 1 deletion(-)
  create mode 100644 libs/renderengine/skia/filters/StrandBlurFilter.cpp
  create mode 100644 libs/renderengine/skia/filters/StrandBlurFilter.h
 
 diff --git a/libs/renderengine/Android.bp b/libs/renderengine/Android.bp
-index ba03b58..bc5bc64 100644
+index 6e2066b..4639b1c 100644
 --- a/libs/renderengine/Android.bp
 +++ b/libs/renderengine/Android.bp
-@@ -114,6 +114,7 @@ filegroup {
+@@ -115,6 +115,7 @@ filegroup {
          "skia/filters/LutShader.cpp",
          "skia/filters/MouriMap.cpp",
          "skia/filters/RuntimeEffectManager.cpp",
@@ -53,34 +32,34 @@ index ba03b58..bc5bc64 100644
      ],
  }
 diff --git a/libs/renderengine/include/renderengine/RenderEngine.h b/libs/renderengine/include/renderengine/RenderEngine.h
-index 3dd2faa..934fd67 100644
+index 8464585..47cfea8 100644
 --- a/libs/renderengine/include/renderengine/RenderEngine.h
 +++ b/libs/renderengine/include/renderengine/RenderEngine.h
-@@ -168,8 +168,9 @@ public:
-         Gaussian,
+@@ -169,8 +169,9 @@ public:
          Kawase,
          KawaseDualFilterV2,
+         KawaseDarkmoon,
 +        Strand,
  
--        ftl_last = KawaseDualFilterV2
+-        ftl_last = KawaseDarkmoon
 +        ftl_last = Strand
      };
  
      static std::unique_ptr<RenderEngine> create(const RenderEngineCreationArgs& args);
 diff --git a/libs/renderengine/skia/SkiaRenderEngine.cpp b/libs/renderengine/skia/SkiaRenderEngine.cpp
-index c4b5c1f..a6aab48 100644
+index 917903c..d8b81d9 100644
 --- a/libs/renderengine/skia/SkiaRenderEngine.cpp
 +++ b/libs/renderengine/skia/SkiaRenderEngine.cpp
-@@ -88,6 +88,7 @@
- #include "filters/GaussianBlurFilter.h"
+@@ -89,6 +89,7 @@
  #include "filters/KawaseBlurDualFilterV2.h"
  #include "filters/KawaseBlurFilter.h"
+ #include "filters/KawaseDarkmoon.h"
 +#include "filters/StrandBlurFilter.h"
  #include "filters/LutShader.h"
  #include "filters/MouriMap.h"
  #include "filters/RuntimeEffectManager.h"
-@@ -354,6 +355,11 @@ SkiaRenderEngine::SkiaRenderEngine(Threaded threaded, PixelFormat pixelFormat,
-             mBlurFilter = new KawaseBlurDualFilterV2(mRuntimeEffectManager);
+@@ -360,6 +361,11 @@ SkiaRenderEngine::SkiaRenderEngine(Threaded threaded, PixelFormat pixelFormat,
+             mBlurFilter = new KawaseDarkmoon(mRuntimeEffectManager);
              break;
          }
 +        case BlurAlgorithm::Strand: {
@@ -91,7 +70,7 @@ index c4b5c1f..a6aab48 100644
      }
  
      mCapture = std::make_unique<SkiaCapture>();
-@@ -1114,6 +1120,9 @@ void SkiaRenderEngine::drawLayersInternal(
+@@ -1123,6 +1129,9 @@ void SkiaRenderEngine::drawLayersInternal(
  
              // TODO(b/182216890): Filter out empty layers earlier
              if (blurRect.width() > 0 && blurRect.height() > 0) {
@@ -102,34 +81,34 @@ index c4b5c1f..a6aab48 100644
                  // only the lowest layer will have blurImage populated earlier
                  if (!blurInput) {
 diff --git a/libs/renderengine/skia/compat/GraphitePipelineManager.cpp b/libs/renderengine/skia/compat/GraphitePipelineManager.cpp
-index 4ec0b5e..2b7a942 100644
+index 3c806bd..9f45964 100644
 --- a/libs/renderengine/skia/compat/GraphitePipelineManager.cpp
 +++ b/libs/renderengine/skia/compat/GraphitePipelineManager.cpp
-@@ -657,6 +657,7 @@ std::vector<PrecompileSettings> chooseBlurPrecompileSettings(RuntimeEffectManage
-         case RenderEngine::BlurAlgorithm::Gaussian:
+@@ -658,6 +658,7 @@ std::vector<PrecompileSettings> chooseBlurPrecompileSettings(RuntimeEffectManage
          case RenderEngine::BlurAlgorithm::Kawase:
          case RenderEngine::BlurAlgorithm::KawaseDualFilterV2:
+         case RenderEngine::BlurAlgorithm::KawaseDarkmoon:
 +        case RenderEngine::BlurAlgorithm::Strand:
              ALOGW("Pipeline precompilation for %s is not yet supported",
                    ftl::enum_string_full(effectManager.getChosenBlurAlgorithm()).c_str());
              break;
 diff --git a/libs/renderengine/skia/filters/BlurFilter.h b/libs/renderengine/skia/filters/BlurFilter.h
-index 74b83a0..0cb7bde 100644
+index 67d0cc5..1575806 100644
 --- a/libs/renderengine/skia/filters/BlurFilter.h
 +++ b/libs/renderengine/skia/filters/BlurFilter.h
-@@ -21,6 +21,11 @@
+@@ -21,7 +21,11 @@
  #include <SkRuntimeEffect.h>
  #include <SkSurface.h>
  
 +#include <renderengine/DisplaySettings.h>
 +#include <renderengine/LayerSettings.h>
 +
+ #include <string>
 +#include <vector>
-+
+ 
  #include "../compat/SkiaGpuContext.h"
  #include "RuntimeEffectManager.h"
- 
-@@ -43,6 +48,11 @@ public:
+@@ -45,6 +49,11 @@ public:
      // Execute blur, saving it to a TEMPORARY texture. WARNING: the returned SkImage is only
      // guaranteed to be valid until the next call to generateTemporaryImage on this BlurFilter. This
      // limitation is to avoid unnecessary allocations.
@@ -638,13 +617,13 @@ index 0000000..99f7565
 +} // namespace renderengine
 +} // namespace android
 diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
-index 9128394..1e7f947 100644
+index aff8ab6..a25068d 100644
 --- a/services/surfaceflinger/SurfaceFlinger.cpp
 +++ b/services/surfaceflinger/SurfaceFlinger.cpp
-@@ -940,6 +940,10 @@ renderengine::RenderEngine::BlurAlgorithm chooseBlurAlgorithm(bool supportsBlur)
-         return renderengine::RenderEngine::BlurAlgorithm::Gaussian;
-     } else if (algorithm == "kawase") {
+@@ -951,6 +951,10 @@ renderengine::RenderEngine::BlurAlgorithm chooseBlurAlgorithm(bool supportsBlur)
          return renderengine::RenderEngine::BlurAlgorithm::Kawase;
+     } else if (algorithm == "kawase_darkmoon") {
+         return renderengine::RenderEngine::BlurAlgorithm::KawaseDarkmoon;
 +    } else if (algorithm == "kawase2") {
 +        return renderengine::RenderEngine::BlurAlgorithm::KawaseDualFilterV2;
 +    } else if (algorithm == "strand" || algorithm.empty()) {
@@ -653,5 +632,5 @@ index 9128394..1e7f947 100644
          return renderengine::RenderEngine::BlurAlgorithm::KawaseDualFilterV2;
      }
 -- 
-2.56.1
+2.43.0
 
